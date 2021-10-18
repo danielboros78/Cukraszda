@@ -136,6 +136,7 @@ namespace Cukraszda
       this.btnFelvitel.TabIndex = 2;
       this.btnFelvitel.Text = "Új süti felvitele";
       this.btnFelvitel.UseVisualStyleBackColor = true;
+      this.btnFelvitel.Click += new System.EventHandler(this.btnFelvitel_Click);
       // 
       // tbLegdragabbInfo
       // 

@@ -51,5 +51,20 @@ namespace Cukraszda
       this.ar = ar;
       this.ertekesites = ertekesites;
     }
+
+    public Cukraszda(string adatok)
+    {
+      string[] a = adatok.Split(';');
+      nev = a[0];
+      tipus = a[1];
+      dijazott = Convert.ToBoolean(a[2]);
+      ar = Convert.ToInt32(a[3]);
+      ertekesites = a[4];
+    }
+
+    public override string ToString()
+    {
+      return $"{nev};{tipus};{ertekesites}";
+    }
   }
 }

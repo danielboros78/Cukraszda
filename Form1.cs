@@ -120,8 +120,8 @@ namespace Cukraszda
 
     private int RandomGeneralas()
     {
-      Random rnd = new Random();
-      return rnd.Next(1, sutik.Count + 1);
+      Random rnd = new Random(Guid.NewGuid().GetHashCode());
+      return rnd.Next(0, sutik.Count);
     }
 
     private void Beolvasas()
@@ -137,22 +137,85 @@ namespace Cukraszda
 
     private void btnAjanlatMentese_Click(object sender, EventArgs e)
     {
-      bool van = false;
-      for (int i = 0; i < sutik.Count; i++)
-      {
-        if (sutik[i].Tipus == tbSutiTipus.Text)
-        {
-          van = true;
-        }
-      }
+      //bool van = false;
+      //for (int i = 0; i < sutik.Count; i++)
+      //{
+      //  if (sutik[i].Tipus == tbSutiTipus.Text)
+      //  {
+      //    van = true;
+      //  }
+      //}
+      //if (tbSutiTipus.Text == "")
+      //{
+      //  MessageBox.Show("Nem írtál be süteménynevet!");
+      //  van = true;
+      //}
+      //if (!van)
+      //{
+      //  MessageBox.Show("Nincs megfelelő sütink! Kérjük, válassz mást!");
+      //}
       if (tbSutiTipus.Text == "")
       {
-        MessageBox.Show("Nem írtál be süteménynevet!");
-        van = true;
+        MessageBox.Show("Nem írtál be típust!");
       }
-      if (!van)
+      else
       {
-        MessageBox.Show("Nincs megfelelő sütink! Kérjük, válassz mást!");
+        List<Cukraszda> ajanlat = new List<Cukraszda>();
+        foreach (var s in sutik)
+        {
+          if (s.Tipus == tbSutiTipus.Text)
+          {
+            ajanlat.Add(s);
+          }
+        }
+        if (ajanlat.Count == 0)
+        {
+          MessageBox.Show("Válassz mást!");
+        }
+        else
+        {
+          try
+          {
+            double atlagar = 0;
+            StreamWriter ki = new StreamWriter("ajanlat.txt");
+            foreach (var a in ajanlat)
+            {
+              ki.WriteLine(a.ToString());
+              atlagar += a.Ar;
+            }
+            MessageBox.Show($"{tbSutiTipus.Text} típusú sütemények átlagára:\n{atlagar /= ajanlat.Count:N2}.- Ft");
+            ki.Close();
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show(ex.Message);
+          }
+        }
+      }
+    }
+
+    private void btnFelvitel_Click(object sender, EventArgs e)
+    {
+      if (tbSuti.Text == "" || tbTipus.Text == "" || tbAr.Text == "" || tbEgyseg.Text == "")
+      {
+        MessageBox.Show("Nem adtál meg minden adatot!");
+      }
+      else
+      {
+        int ar;
+        if (int.TryParse(tbAr.Text, out ar))
+        {
+          Cukraszda uj = new Cukraszda(tbSuti.Text, tbTipus.Text, cbDijazott.Checked, ar, tbEgyseg.Text);
+          sutik.Add(uj);
+          StreamWriter ki = new StreamWriter("cuki.txt",true);
+          ki.WriteLine($"{uj.Nev};{uj.Tipus};{uj.Dijazott};{uj.Ar};{uj.Ertekesites}");
+          ki.Close();
+        }
+        else
+        {
+          MessageBox.Show("Az új sütemény ára nem jó!");
+          tbAr.Focus();
+        }
       }
     }
   }
